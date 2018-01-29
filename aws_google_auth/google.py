@@ -248,7 +248,11 @@ class Google:
         await_url = "https://content.googleapis.com/cryptauth/v1/authzen/awaittx?alt=json&key=%s" % data_key
         await_body = {'txId': data_tx_id}
 
-        print("Open the Google App, and tap 'Yes' on the prompt to sign in ...")
+        try:
+            prompt_number = response_page.find('div', {'class': 'swI1Tc'}).decode_contents()
+            prompt_message = "Tap 'Yes' on the Google prompt, then tap '{}' on your phone to sign in...".format(prompt_number)
+        except AttributeError:
+            prompt_message = "Open the Google App, and tap 'Yes' on the prompt to sign in ..."
 
         self.session.headers['Referer'] = sess.url
         response = self.session.post(await_url, json=await_body)
